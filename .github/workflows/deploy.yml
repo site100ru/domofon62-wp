@@ -15,8 +15,8 @@ jobs:
           username: ${{ secrets.DOMOFON_USERNAME }}
           key: ${{ secrets.DOMOFON_KEY }}
           script: |
-            # cd /var/www/u1079678/data/www/oknamobifon.ru/wp-content/themes/oknamobifon/promo
-            # git clone https://github.com/site100ru/oknamobifon-promo.git .
+            cd ~/domofon62/public_html/wp-content/themes/site100domofon
+            git clone https://github.com/site100ru/domofon62-wp.git .
             
             #cd /var/www/u1079678/data/www/oknamobifon.ru/wp-content/themes/oknamobifon/promo
             #git pull
