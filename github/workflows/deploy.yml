@@ -1,0 +1,22 @@
+name: Deploy to Reg.ru
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.OKNAMOBIFON_HOST }}
+          username: ${{ secrets.OKNAMOBIFON_USERNAME }}
+          key: ${{ secrets.OKNAMOBIFON_NEW_KEY }}
+          script: |
+            # cd /var/www/u1079678/data/www/oknamobifon.ru/wp-content/themes/oknamobifon/promo
+            # git clone https://github.com/site100ru/oknamobifon-promo.git .
+            
+            #cd /var/www/u1079678/data/www/oknamobifon.ru/wp-content/themes/oknamobifon/promo
+            #git pull
