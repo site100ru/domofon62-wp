@@ -120,8 +120,8 @@
 							<script>
 								function getName( name ) {
 									let productName = name;
-									document.getElementById( 'modalProduct' ).innerHTML = name;
-									document.getElementById( 'CF' ).value = name;
+									document.getElementById('modalProduct').innerHTML = name;
+									document.getElementById('product-title').value = name; 
 								}
 							</script>
 						</p>
