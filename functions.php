@@ -1763,8 +1763,8 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 			ob_start();
 			?>
 			<div class="uslugi-objects-section">
-					<div class="light-grey-bg">
-							<div class="container pb-5">
+					<div class="light-grey-bg py-5">
+							<div class="container">
 									<h2 class="h2-title mb-4"><?php echo esc_html($title); ?></h2>
 										<?php foreach ($objects as $object) : ?>
 												<div class="padding-row row justify-content-center justify-content-lg-evenly align-items-center p-2 mt-4 bg-white">
