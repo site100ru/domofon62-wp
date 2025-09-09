@@ -1765,38 +1765,36 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 			<div class="uslugi-objects-section">
 					<div class="light-grey-bg">
 							<div class="container pb-5">
-									<h2 class="catalog-goods-h1-second px-4 px-md-2 text-center text-md-start"><?php echo esc_html($title); ?></h2>
-									<div class="mt-5">
-											<?php foreach ($objects as $object) : ?>
-													<div class="padding-row row justify-content-center justify-content-lg-evenly align-items-center p-2 mt-4 bg-white">
-															<div class="col-12 col-md-6 col-lg-4 obj-thumbnail text-center">
-																	<?php 
-																	$thumbnail_id = get_post_thumbnail_id($object->ID);
-																	if ($thumbnail_id) : 
-																			$bgtnl = get_the_post_thumbnail_url($object->ID, 'full');
-																			$img_alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
-																	?>
-																			<img src="<?php echo esc_url($bgtnl); ?>" alt="<?php echo esc_attr($img_alt); ?>" class="img-fluid"/>
-																	<?php endif; ?>
-															</div>
-															<div class="col-12 col-md-6 col-lg-8 ps-5">
-																	<a href="<?php echo get_permalink($object->ID); ?>">
-																			<div class="obj-title pb-2 pt-4 pt-md-0"><?php echo esc_html($object->post_title); ?></div>
-																	</a>
-																	<div class="pt-2"><?php echo apply_filters('the_content', $object->post_content); ?></div>
-																	<div class="pt-3">
-																			<a href="<?php echo get_permalink($object->ID); ?>" class="oneu-white-area-btn">Смотреть фото</a>
-																	</div>
-															</div>
-													</div>
-											<?php endforeach; ?>
-											
-											<?php if ($show_button) : ?>
-													<div class="text-center mt-4">
-															<a href="<?php echo get_page_link(get_page_by_path('obiekty')); ?>" class="oneu-white-area-btn" style="max-width: 280px; width: 100%;">Смотреть еще примеры</a>
-													</div>
-											<?php endif; ?>
-									</div>
+									<h2 class="h2-title mb-4"><?php echo esc_html($title); ?></h2>
+										<?php foreach ($objects as $object) : ?>
+												<div class="padding-row row justify-content-center justify-content-lg-evenly align-items-center p-2 mt-4 bg-white">
+														<div class="col-12 col-md-6 col-lg-4 obj-thumbnail text-center">
+																<?php 
+																$thumbnail_id = get_post_thumbnail_id($object->ID);
+																if ($thumbnail_id) : 
+																		$bgtnl = get_the_post_thumbnail_url($object->ID, 'full');
+																		$img_alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
+																?>
+																		<img src="<?php echo esc_url($bgtnl); ?>" alt="<?php echo esc_attr($img_alt); ?>" class="img-fluid"/>
+																<?php endif; ?>
+														</div>
+														<div class="col-12 col-md-6 col-lg-8 ps-5">
+																<a href="<?php echo get_permalink($object->ID); ?>">
+																		<div class="obj-title pb-2 pt-4 pt-md-0"><?php echo esc_html($object->post_title); ?></div>
+																</a>
+																<div class="pt-2"><?php echo apply_filters('the_content', $object->post_content); ?></div>
+																<div class="pt-3">
+																		<a href="<?php echo get_permalink($object->ID); ?>" class="oneu-white-area-btn">Смотреть фото</a>
+																</div>
+														</div>
+												</div>
+										<?php endforeach; ?>
+										
+										<?php if ($show_button) : ?>
+												<div class="text-center mt-4">
+														<a href="<?php echo get_page_link(get_page_by_path('obiekty')); ?>" class="oneu-white-area-btn" style="max-width: 280px; width: 100%;">Смотреть еще примеры</a>
+												</div>
+										<?php endif; ?>
 							</div>
 					</div>
 			</div>
