@@ -1550,4 +1550,301 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 	add_action( 'customize_register', 'mytheme_customize_register' );
 	/*** END ДОБАВЛЯЕМ ВОЗМОЖНОСТЬ В НАСТРОЙКАХ ТЕМЫ ДОБАВИТЬ КОНТАКТЫ И КОД СЧЕТЧИКА ***/
 
+	/**
+	 * Добавляем метабокс для выбора объектов в админке услуг (упрощенная версия)
+	 */
+	add_action('add_meta_boxes', 'add_uslugi_objects_metabox');
+	function add_uslugi_objects_metabox() {
+			add_meta_box(
+					'uslugi-objects',
+					'Объекты для отображения',
+					'uslugi_objects_callback',
+					'uslugi',
+					'normal',
+					'high'
+			);
+	}
+
+	/**
+	 * Callback функция для отображения метабокса
+	 */
+	function uslugi_objects_callback($post) {
+			wp_nonce_field('save_uslugi_objects', 'uslugi_objects_nonce');
+			
+			// Получаем сохраненные значения
+			$selected_objects = get_post_meta($post->ID, '_selected_objects', true);
+			$objects_title = get_post_meta($post->ID, '_objects_title', true);
+			$show_all_button = get_post_meta($post->ID, '_show_all_button', true);
+			
+			if (!is_array($selected_objects)) {
+					$selected_objects = array();
+			}
+			
+			// Значение по умолчанию для заголовка
+			if (empty($objects_title)) {
+					$objects_title = 'Примеры наших работ';
+			}
+			
+			echo '<table class="form-table">';
+			
+			// Заголовок по умолчанию
+			echo '<tr>';
+			echo '<th scope="row">Заголовок по умолчанию</th>';
+			echo '<td>';
+			echo '<input type="text" name="objects_title" value="' . esc_attr($objects_title) . '" class="regular-text" />';
+			echo '</td>';
+			echo '</tr>';
+			
+			// Выбор объектов
+			echo '<tr>';
+			echo '<th scope="row">Выберите объекты</th>';
+			echo '<td>';
+			
+			// Получаем все объекты
+			$objects = get_posts(array(
+					'post_type' => 'objekty',
+					'posts_per_page' => -1,
+					'orderby' => 'title',
+					'order' => 'ASC',
+					'post_status' => 'publish'
+			));
+			
+			if (!empty($objects)) {
+					// Кнопки "Выбрать все" и "Снять все"
+					echo '<div class="select-all-controls" style="margin-bottom: 10px; padding: 10px; background: #fff; border: 1px solid #ddd; border-radius: 3px;">';
+					echo '<button type="button" class="button" id="select-all-objects">Выбрать все</button>';
+					echo '<button type="button" class="button" id="deselect-all-objects">Снять все</button>';
+					echo '<span style="margin-left: 20px; font-style: italic; color: #666;">Всего объектов: ' . count($objects) . ', выбрано: <span id="selected-count">' . count($selected_objects) . '</span></span>';
+					echo '</div>';
+					
+					echo '<div style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; background: #f9f9f9; border-radius: 3px;">';
+					foreach ($objects as $object) {
+							$checked = in_array($object->ID, $selected_objects) ? 'checked' : '';
+							echo '<div style="display: flex; align-items: center; margin-bottom: 8px; padding: 5px;">';
+							echo '<label style="display: flex; align-items: center; cursor: pointer;">';
+							echo '<input type="checkbox" name="selected_objects[]" value="' . $object->ID . '" ' . $checked . ' class="object-checkbox" style="margin-right: 8px;"> ';
+							echo esc_html($object->post_title);
+							echo '</label>';
+							echo '</div>';
+					}
+					echo '</div>';
+					echo '<p class="description">Выберите объекты для отображения. Они будут доступны через шорткод <code>[uslugi_objects]</code>.</p>';
+			} else {
+					echo '<p>Объекты не найдены. <a href="' . admin_url('post-new.php?post_type=objekty') . '">Создать первый объект</a></p>';
+			}
+			
+			echo '</td>';
+			echo '</tr>';
+			
+			// Кнопка "Показать все" по умолчанию
+			echo '<tr>';
+			echo '<th scope="row">Кнопка "Показать все"</th>';
+			echo '<td>';
+			echo '<label>';
+			echo '<input type="checkbox" name="show_all_button" value="1" ' . checked(1, $show_all_button, false) . '> ';
+			echo 'Показывать кнопку "Смотреть еще примеры" по умолчанию';
+			echo '</label>';
+			echo '</td>';
+			echo '</tr>';
+			
+			echo '</table>';
+			
+			// JavaScript для функционала
+			?>
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+					function updateSelectedCount() {
+							var count = $('.object-checkbox:checked').length;
+							$('#selected-count').text(count);
+					}
+					
+					$('#select-all-objects').click(function() {
+							$('.object-checkbox').prop('checked', true);
+							updateSelectedCount();
+					});
+					
+					$('#deselect-all-objects').click(function() {
+							$('.object-checkbox').prop('checked', false);
+							updateSelectedCount();
+					});
+					
+					$('.object-checkbox').change(function() {
+							updateSelectedCount();
+					});
+					
+					// Инициализация счетчика
+					updateSelectedCount();
+			});
+			</script>
+			<?php
+	}
+
+	/**
+	 * Сохраняем данные метабокса
+	 */
+	add_action('save_post', 'save_uslugi_objects_metabox');
+	function save_uslugi_objects_metabox($post_id) {
+			if (!isset($_POST['uslugi_objects_nonce']) || !wp_verify_nonce($_POST['uslugi_objects_nonce'], 'save_uslugi_objects')) {
+					return;
+			}
+			
+			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+					return;
+			}
+			
+			if (!current_user_can('edit_post', $post_id)) {
+					return;
+			}
+			
+			if (get_post_type($post_id) !== 'uslugi') {
+					return;
+			}
+			
+			// Сохраняем данные
+			$selected_objects = isset($_POST['selected_objects']) ? array_map('intval', $_POST['selected_objects']) : array();
+			update_post_meta($post_id, '_selected_objects', $selected_objects);
+			
+			$show_all_button = isset($_POST['show_all_button']) ? 1 : 0;
+			update_post_meta($post_id, '_show_all_button', $show_all_button);
+			
+			$objects_title = isset($_POST['objects_title']) ? sanitize_text_field($_POST['objects_title']) : '';
+			update_post_meta($post_id, '_objects_title', $objects_title);
+	}
+
+	/**
+	 * Регистрируем шорткод для отображения объектов
+	 */
+	add_shortcode('uslugi_objects', 'uslugi_objects_shortcode');
+	function uslugi_objects_shortcode($atts) {
+			global $post;
+			
+			// Если мы не на странице услуги, не выводим ничего
+			if (!$post || $post->post_type !== 'uslugi') {
+					return '';
+			}
+			
+			// Параметры шорткода
+			$atts = shortcode_atts(array(
+					'title' => '',
+					'show_button' => '',
+					'limit' => 0
+			), $atts, 'uslugi_objects');
+			
+			// Получаем выбранные объекты
+			$selected_objects = get_post_meta($post->ID, '_selected_objects', true);
+			if (!is_array($selected_objects) || empty($selected_objects)) {
+					return '';
+			}
+			
+			// Определяем заголовок
+			$title = !empty($atts['title']) ? $atts['title'] : get_post_meta($post->ID, '_objects_title', true);
+			if (empty($title)) {
+					$title = 'Примеры наших работ';
+			}
+			
+			// Определяем показ кнопки
+			$show_button = $atts['show_button'] !== '' ? (bool)$atts['show_button'] : (bool)get_post_meta($post->ID, '_show_all_button', true);
+			
+			// Получаем объекты
+			$objects = get_posts(array(
+					'post_type' => 'objekty',
+					'posts_per_page' => -1,
+					'post__in' => $selected_objects,
+					'orderby' => 'date',
+					'order' => 'DESC', // от новых к старым
+					'post_status' => 'publish'
+			));
+			
+			if (empty($objects)) {
+					return '';
+			}
+			
+			// Формируем HTML
+			ob_start();
+			?>
+			<div class="uslugi-objects-section">
+					<div class="light-grey-bg">
+							<div class="container pb-5">
+									<h2 class="catalog-goods-h1-second px-4 px-md-2 text-center text-md-start"><?php echo esc_html($title); ?></h2>
+									<div class="mt-5">
+											<?php foreach ($objects as $object) : ?>
+													<div class="padding-row row justify-content-center justify-content-lg-evenly align-items-center p-2 mt-4 bg-white">
+															<div class="col-12 col-md-6 col-lg-4 obj-thumbnail text-center">
+																	<?php 
+																	$thumbnail_id = get_post_thumbnail_id($object->ID);
+																	if ($thumbnail_id) : 
+																			$bgtnl = get_the_post_thumbnail_url($object->ID, 'full');
+																			$img_alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
+																	?>
+																			<img src="<?php echo esc_url($bgtnl); ?>" alt="<?php echo esc_attr($img_alt); ?>" class="img-fluid"/>
+																	<?php endif; ?>
+															</div>
+															<div class="col-12 col-md-6 col-lg-8 ps-5">
+																	<a href="<?php echo get_permalink($object->ID); ?>">
+																			<div class="obj-title pb-2 pt-4 pt-md-0"><?php echo esc_html($object->post_title); ?></div>
+																	</a>
+																	<div class="pt-2"><?php echo apply_filters('the_content', $object->post_content); ?></div>
+																	<div class="pt-3">
+																			<a href="<?php echo get_permalink($object->ID); ?>" class="oneu-white-area-btn">Смотреть фото</a>
+																	</div>
+															</div>
+													</div>
+											<?php endforeach; ?>
+											
+											<?php if ($show_button) : ?>
+													<div class="text-center mt-4">
+															<a href="<?php echo get_page_link(get_page_by_path('obiekty')); ?>" class="oneu-white-area-btn" style="max-width: 280px; width: 100%;">Смотреть еще примеры</a>
+													</div>
+											<?php endif; ?>
+									</div>
+							</div>
+					</div>
+			</div>
+			<?php
+			return ob_get_clean();
+	}
+
+	/**
+	 * Добавляем кнопку в редактор для быстрой вставки шорткода
+	 */
+	add_action('media_buttons', 'add_uslugi_objects_button');
+	function add_uslugi_objects_button() {
+			global $post_type;
+			if ($post_type === 'uslugi') {
+					echo '<button type="button" class="button" id="insert-uslugi-objects" title="Вставить объекты услуги">
+									<span class="dashicons dashicons-images-alt2"></span> Вставить объекты
+								</button>';
+			}
+	}
+
+	/**
+	 * JavaScript для кнопки вставки шорткода
+	 */
+	add_action('admin_footer', 'uslugi_objects_admin_script');
+	function uslugi_objects_admin_script() {
+			global $post_type;
+			if ($post_type === 'uslugi') {
+					?>
+					<script type="text/javascript">
+					jQuery(document).ready(function($) {
+							$('#insert-uslugi-objects').click(function() {
+									// Проверяем, какой редактор активен
+									if (typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor && !tinyMCE.activeEditor.isHidden()) {
+											// Visual редактор
+											tinyMCE.activeEditor.execCommand('mceInsertContent', false, '[uslugi_objects]');
+									} else {
+											// Text редактор
+											var textarea = $('#content');
+											var cursorPos = textarea.prop('selectionStart');
+											var v = textarea.val();
+											var textBefore = v.substring(0, cursorPos);
+											var textAfter = v.substring(cursorPos, v.length);
+											textarea.val(textBefore + '[uslugi_objects]' + textAfter);
+									}
+							});
+					});
+					</script>
+					<?php
+			}
+	}
 ?>
