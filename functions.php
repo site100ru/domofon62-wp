@@ -1792,7 +1792,7 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 										
 										<?php if ($show_button) : ?>
 												<div class="text-center mt-4">
-														<a href="<?php echo get_page_link(get_page_by_path('obiekty')); ?>" class="oneu-white-area-btn" style="max-width: 280px; width: 100%;">Смотреть еще примеры</a>
+														<a href="/objekty" class="oneu-white-area-btn" style="max-width: 280px; width: 100%;">Смотреть еще примеры</a>
 												</div>
 										<?php endif; ?>
 							</div>
