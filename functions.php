@@ -1849,32 +1849,82 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 
 
 /* ПРИНУДИТЕЛЬНАЯ ГЕНЕРАЦИЯ ЛАТИНСКИХ URL ДЛЯ ТОВРОВ ПРИ СОХРАНЕНИИ */
-// Решение для плагина "Обмен Данными Электронной Коммерции" версии 2.0.0
-// Принудительная генерация латинских URL после синхронизации с 1С
+// Решение для плагина "Обмен Данными Электронной Коммерции"
+// Агрессивный метод перехвата ЛЮБОГО обновления товаров
 
-// Основные хуки плагина
-add_action('alg_export_after_product_save', 'force_latin_slug_after_alg_export', 10, 1);
-add_action('alg_import_after_product_save', 'force_latin_slug_after_alg_import', 10, 1);
-add_action('wc1c_product_updated', 'force_latin_slug_after_wc1c_update', 10, 1);
-add_action('wc1c_product_created', 'force_latin_slug_after_wc1c_create', 10, 1);
+// 1. Перехват через мета-данные с высокой приоритетностью
+add_action('updated_post_meta', 'force_latin_slug_on_meta_update', 1, 4);
+add_action('added_post_meta', 'force_latin_slug_on_meta_update', 1, 4);
 
-function force_latin_slug_after_alg_export($product_id) {
-    force_regenerate_alg_slug($product_id);
+function force_latin_slug_on_meta_update($meta_id, $post_id, $meta_key, $meta_value) {
+    if (get_post_type($post_id) === 'product') {
+        // Откладываем выполнение до конца всех операций
+        add_action('shutdown', function() use ($post_id) {
+            force_latin_slug_direct($post_id);
+        });
+    }
 }
 
-function force_latin_slug_after_alg_import($product_id) {
-    force_regenerate_alg_slug($product_id);
+// 2. Перехват через обновление постов
+add_action('post_updated', 'force_latin_slug_on_post_update', 1, 3);
+
+function force_latin_slug_on_post_update($post_id, $post_after, $post_before) {
+    if ($post_after->post_type === 'product') {
+        add_action('shutdown', function() use ($post_id) {
+            force_latin_slug_direct($post_id);
+        });
+    }
 }
 
-function force_latin_slug_after_wc1c_update($product_id) {
-    force_regenerate_alg_slug($product_id);
+// 3. Прямое обновление всех товаров каждые 2 минуты
+add_action('init', 'schedule_force_slug_fix');
+
+function schedule_force_slug_fix() {
+    if (!wp_next_scheduled('force_all_slugs_latin')) {
+        wp_schedule_event(time(), 'every_two_minutes', 'force_all_slugs_latin');
+    }
 }
 
-function force_latin_slug_after_wc1c_create($product_id) {
-    force_regenerate_alg_slug($product_id);
+add_filter('cron_schedules', 'add_two_minutes_interval');
+function add_two_minutes_interval($schedules) {
+    $schedules['every_two_minutes'] = array(
+        'interval' => 120,
+        'display' => __('Every 2 Minutes')
+    );
+    return $schedules;
 }
 
-function force_regenerate_alg_slug($product_id) {
+add_action('force_all_slugs_latin', 'force_all_products_slugs_latin');
+function force_all_products_slugs_latin() {
+    global $wpdb;
+    
+    // Находим ВСЕ товары с кириллическими URL
+    $products = $wpdb->get_results("
+        SELECT ID, post_title, post_name 
+        FROM {$wpdb->posts} 
+        WHERE post_type = 'product' 
+        AND (post_name REGEXP '[А-Яа-яЁё]' OR post_name LIKE '%D0%' OR post_name = '')
+    ");
+    
+    foreach ($products as $product) {
+        $new_slug = sanitize_title($product->post_title);
+        if (empty($new_slug)) {
+            $new_slug = 'product-' . $product->ID;
+        }
+        
+        // Принудительно обновляем
+        $wpdb->update(
+            $wpdb->posts,
+            array('post_name' => $new_slug),
+            array('ID' => $product->ID),
+            array('%s'),
+            array('%d')
+        );
+    }
+}
+
+// 4. Основная функция принудительного обновления
+function force_latin_slug_direct($product_id) {
     if (get_post_type($product_id) !== 'product') return;
     
     $post = get_post($product_id);
@@ -1887,7 +1937,7 @@ function force_regenerate_alg_slug($product_id) {
         $new_slug = 'product-' . $product_id;
     }
     
-    // Прямое обновление в БД
+    // Всегда обновляем, чтобы гарантировать латинский slug
     global $wpdb;
     $wpdb->update(
         $wpdb->posts,
@@ -1900,61 +1950,33 @@ function force_regenerate_alg_slug($product_id) {
     clean_post_cache($product_id);
 }
 
-// Агрессивная проверка по расписанию на случай если хуки не сработают
-add_action('init', 'schedule_alg_slug_check');
-
-function schedule_alg_slug_check() {
-    if (!wp_next_scheduled('alg_slug_fix_hook')) {
-        wp_schedule_event(time(), 'every_minute', 'alg_slug_fix_hook');
+// 5. Ручной вызов для немедленного исправления
+add_action('init', 'manual_slug_fix_check');
+function manual_slug_fix_check() {
+    if (isset($_GET['fix_slugs_now']) && current_user_can('manage_options')) {
+        force_all_products_slugs_latin();
+        wp_die("Все URL товаров исправлены на латиницу!");
     }
 }
 
-add_filter('cron_schedules', 'add_every_minute_interval');
-function add_every_minute_interval($schedules) {
-    $schedules['every_minute'] = array(
-        'interval' => 60,
-        'display' => __('Every Minute')
-    );
-    return $schedules;
-}
-
-add_action('alg_slug_fix_hook', 'fix_alg_products_slugs');
-function fix_alg_products_slugs() {
-    global $wpdb;
-    
-    // Проверяем товары измененные за последние 5 минут
-    $recent_products = $wpdb->get_results("
-        SELECT ID, post_title, post_name 
-        FROM {$wpdb->posts} 
-        WHERE post_type = 'product' 
-        AND post_modified > DATE_SUB(NOW(), INTERVAL 5 MINUTE)
-        AND (post_name REGEXP '[А-Яа-яЁё]' OR post_name LIKE '%D0%' OR post_name = '')
-    ");
-    
-    foreach ($recent_products as $product) {
-        $new_slug = sanitize_title($product->post_title);
-        if (empty($new_slug)) {
-            $new_slug = 'product-' . $product->ID;
-        }
-        
-        $wpdb->update(
-            $wpdb->posts,
-            array('post_name' => $new_slug),
-            array('ID' => $product->ID),
-            array('%s'),
-            array('%d')
-        );
-    }
-}
-
-// Диагностика - для отладки (можно удалить после тестирования)
+// 6. Улучшенная диагностика - логируем ВСЕ хуки связанные с постами
 add_action('all', function($hook) {
-    if (strpos($hook, 'alg') !== false || strpos($hook, 'wc1c') !== false) {
+    $post_hooks = ['post_', 'save_', 'wp_', 'updated_', 'added_', 'edited_'];
+    $is_post_hook = false;
+    
+    foreach ($post_hooks as $post_hook) {
+        if (strpos($hook, $post_hook) !== false) {
+            $is_post_hook = true;
+            break;
+        }
+    }
+    
+    if ($is_post_hook) {
         $args = func_get_args();
         file_put_contents(
-            ABSPATH . 'alg_hooks_debug.log', 
-            date('Y-m-d H:i:s') . " - Hook: " . $hook . " - Args: " . json_encode($args) . PHP_EOL, 
-            FILE_APPEND
+            ABSPATH . 'all_hooks_debug.log', 
+            date('Y-m-d H:i:s') . " - Hook: " . $hook . PHP_EOL, 
+            FILE_APPEND | LOCK_EX
         );
     }
 });
