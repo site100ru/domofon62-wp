@@ -1849,29 +1849,45 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 
 
 /* ПРИНУДИТЕЛЬНАЯ ГЕНЕРАЦИЯ ЛАТИНСКИХ URL ДЛЯ ТОВРОВ ПРИ СОХРАНЕНИИ */
-add_filter('wp_insert_post_data', 'force_latin_slug_for_products', 99, 2);
+// Перехватываем обновление любых данных товара
+add_action('updated_post_meta', 'force_latin_slug_on_any_update', 10, 4);
+add_action('added_post_meta', 'force_latin_slug_on_any_update', 10, 4);
 
-function force_latin_slug_for_products($data, $postarr) {
-    // Работаем только с товарами WooCommerce
-    if ($data['post_type'] === 'product') {
-        $current_slug = $data['post_name'];
-        
-        // Если slug содержит кириллицу или URL-encoded кириллицу
-        if (preg_match('/[А-Яа-яЁё]/u', $current_slug) || 
-            preg_match('/%D[0-9A-F]/', $current_slug) ||
-            empty($current_slug)) {
-            
-            // Генерируем латинский slug из названия товара
-            $new_slug = sanitize_title($data['post_title']);
-            
-            // Если slug пустой, используем ID товара
-            if (empty($new_slug)) {
-                $new_slug = 'product-' . $postarr['ID'];
-            }
-            
-            $data['post_name'] = $new_slug;
-        }
+function force_latin_slug_on_any_update($meta_id, $post_id, $meta_key, $meta_value) {
+    // Проверяем, что это товар WooCommerce
+    if (get_post_type($post_id) === 'product') {
+        // Даем немного времени на завершение обновления из 1С
+        add_action('shutdown', function() use ($post_id) {
+            force_regenerate_product_slug($post_id);
+        });
+    }
+}
+
+function force_regenerate_product_slug($post_id) {
+    $post = get_post($post_id);
+    if (!$post || $post->post_type !== 'product') return;
+    
+    $current_slug = $post->post_name;
+    
+    // Всегда генерируем новый slug, независимо от содержания
+    $new_slug = sanitize_title($post->post_title);
+    
+    if (empty($new_slug)) {
+        $new_slug = 'product-' . $post_id;
     }
     
-    return $data;
+    // Принудительно обновляем, если slug изменился
+    if ($current_slug !== $new_slug) {
+        // Прямое обновление в БД, минуя хуки
+        global $wpdb;
+        $wpdb->update(
+            $wpdb->posts,
+            array('post_name' => $new_slug),
+            array('ID' => $post_id),
+            array('%s'),
+            array('%d')
+        );
+        
+        clean_post_cache($post_id);
+    }
 }
