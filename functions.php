@@ -1849,45 +1849,113 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 
 
 /* ПРИНУДИТЕЛЬНАЯ ГЕНЕРАЦИЯ ЛАТИНСКИХ URL ДЛЯ ТОВРОВ ПРИ СОХРАНЕНИИ */
-// Перехватываем обновление любых данных товара
-add_action('updated_post_meta', 'force_latin_slug_on_any_update', 10, 4);
-add_action('added_post_meta', 'force_latin_slug_on_any_update', 10, 4);
+// Решение для плагина "Обмен Данными Электронной Коммерции" версии 2.0.0
+// Принудительная генерация латинских URL после синхронизации с 1С
 
-function force_latin_slug_on_any_update($meta_id, $post_id, $meta_key, $meta_value) {
-    // Проверяем, что это товар WooCommerce
-    if (get_post_type($post_id) === 'product') {
-        // Даем немного времени на завершение обновления из 1С
-        add_action('shutdown', function() use ($post_id) {
-            force_regenerate_product_slug($post_id);
-        });
-    }
+// Основные хуки плагина
+add_action('alg_export_after_product_save', 'force_latin_slug_after_alg_export', 10, 1);
+add_action('alg_import_after_product_save', 'force_latin_slug_after_alg_import', 10, 1);
+add_action('wc1c_product_updated', 'force_latin_slug_after_wc1c_update', 10, 1);
+add_action('wc1c_product_created', 'force_latin_slug_after_wc1c_create', 10, 1);
+
+function force_latin_slug_after_alg_export($product_id) {
+    force_regenerate_alg_slug($product_id);
 }
 
-function force_regenerate_product_slug($post_id) {
-    $post = get_post($post_id);
-    if (!$post || $post->post_type !== 'product') return;
+function force_latin_slug_after_alg_import($product_id) {
+    force_regenerate_alg_slug($product_id);
+}
+
+function force_latin_slug_after_wc1c_update($product_id) {
+    force_regenerate_alg_slug($product_id);
+}
+
+function force_latin_slug_after_wc1c_create($product_id) {
+    force_regenerate_alg_slug($product_id);
+}
+
+function force_regenerate_alg_slug($product_id) {
+    if (get_post_type($product_id) !== 'product') return;
+    
+    $post = get_post($product_id);
+    if (!$post) return;
     
     $current_slug = $post->post_name;
-    
-    // Всегда генерируем новый slug, независимо от содержания
     $new_slug = sanitize_title($post->post_title);
     
     if (empty($new_slug)) {
-        $new_slug = 'product-' . $post_id;
+        $new_slug = 'product-' . $product_id;
     }
     
-    // Принудительно обновляем, если slug изменился
-    if ($current_slug !== $new_slug) {
-        // Прямое обновление в БД, минуя хуки
-        global $wpdb;
+    // Прямое обновление в БД
+    global $wpdb;
+    $wpdb->update(
+        $wpdb->posts,
+        array('post_name' => $new_slug),
+        array('ID' => $product_id),
+        array('%s'),
+        array('%d')
+    );
+    
+    clean_post_cache($product_id);
+}
+
+// Агрессивная проверка по расписанию на случай если хуки не сработают
+add_action('init', 'schedule_alg_slug_check');
+
+function schedule_alg_slug_check() {
+    if (!wp_next_scheduled('alg_slug_fix_hook')) {
+        wp_schedule_event(time(), 'every_minute', 'alg_slug_fix_hook');
+    }
+}
+
+add_filter('cron_schedules', 'add_every_minute_interval');
+function add_every_minute_interval($schedules) {
+    $schedules['every_minute'] = array(
+        'interval' => 60,
+        'display' => __('Every Minute')
+    );
+    return $schedules;
+}
+
+add_action('alg_slug_fix_hook', 'fix_alg_products_slugs');
+function fix_alg_products_slugs() {
+    global $wpdb;
+    
+    // Проверяем товары измененные за последние 5 минут
+    $recent_products = $wpdb->get_results("
+        SELECT ID, post_title, post_name 
+        FROM {$wpdb->posts} 
+        WHERE post_type = 'product' 
+        AND post_modified > DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+        AND (post_name REGEXP '[А-Яа-яЁё]' OR post_name LIKE '%D0%' OR post_name = '')
+    ");
+    
+    foreach ($recent_products as $product) {
+        $new_slug = sanitize_title($product->post_title);
+        if (empty($new_slug)) {
+            $new_slug = 'product-' . $product->ID;
+        }
+        
         $wpdb->update(
             $wpdb->posts,
             array('post_name' => $new_slug),
-            array('ID' => $post_id),
+            array('ID' => $product->ID),
             array('%s'),
             array('%d')
         );
-        
-        clean_post_cache($post_id);
     }
 }
+
+// Диагностика - для отладки (можно удалить после тестирования)
+add_action('all', function($hook) {
+    if (strpos($hook, 'alg') !== false || strpos($hook, 'wc1c') !== false) {
+        $args = func_get_args();
+        file_put_contents(
+            ABSPATH . 'alg_hooks_debug.log', 
+            date('Y-m-d H:i:s') . " - Hook: " . $hook . " - Args: " . json_encode($args) . PHP_EOL, 
+            FILE_APPEND
+        );
+    }
+});
+/* END ПРИНУДИТЕЛЬНАЯ ГЕНЕРАЦИЯ ЛАТИНСКИХ URL ДЛЯ ТОВРОВ ПРИ СОХРАНЕНИИ */
