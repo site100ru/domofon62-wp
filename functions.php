@@ -1845,4 +1845,33 @@ add_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 )
 					<?php
 			}
 	}
-?>
+
+
+
+/* ПРИНУДИТЕЛЬНАЯ ГЕНЕРАЦИЯ ЛАТИНСКИХ URL ДЛЯ ТОВРОВ ПРИ СОХРАНЕНИИ */
+add_filter('wp_insert_post_data', 'force_latin_slug_for_products', 99, 2);
+
+function force_latin_slug_for_products($data, $postarr) {
+    // Работаем только с товарами WooCommerce
+    if ($data['post_type'] === 'product') {
+        $current_slug = $data['post_name'];
+        
+        // Если slug содержит кириллицу или URL-encoded кириллицу
+        if (preg_match('/[А-Яа-яЁё]/u', $current_slug) || 
+            preg_match('/%D[0-9A-F]/', $current_slug) ||
+            empty($current_slug)) {
+            
+            // Генерируем латинский slug из названия товара
+            $new_slug = sanitize_title($data['post_title']);
+            
+            // Если slug пустой, используем ID товара
+            if (empty($new_slug)) {
+                $new_slug = 'product-' . $postarr['ID'];
+            }
+            
+            $data['post_name'] = $new_slug;
+        }
+    }
+    
+    return $data;
+}
