@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Single Product Image
  *
@@ -75,15 +76,10 @@ $wrapper_classes   = apply_filters(
 
 <script>
     jQuery(document).ready(function($) {
-        // Собираем все изображения из галереи WooCommerce (исключая первое - главное изображение)
+        // Собираем ВСЕ изображения из галереи WooCommerce (включая главное)
         var galleryImages = [];
 
         $('.woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image').each(function(index) {
-            // Пропускаем первое изображение (главное изображение товара)
-            if (index === 0) {
-                return true; // continue в jQuery each
-            }
-
             var $link = $(this).find('a');
             var imgSrc = $link.attr('href');
             var imgAlt = $(this).find('img').attr('alt') || 'Изображение товара';
@@ -92,7 +88,7 @@ $wrapper_classes   = apply_filters(
                 galleryImages.push({
                     src: imgSrc,
                     alt: imgAlt,
-                    index: galleryImages.length // используем реальный индекс в массиве
+                    index: index
                 });
             }
         });
@@ -108,10 +104,12 @@ $wrapper_classes   = apply_filters(
                 var activeClass = index === startIndex ? 'active' : '';
                 var ariaCurrent = index === startIndex ? 'aria-current="true"' : '';
 
-                // Индикатор
-                indicatorsHtml += `
-				<button type="button" data-bs-target="#productGalleryModal" data-bs-slide-to="${index}" aria-label="Slide ${index + 1}" class="${activeClass}" ${ariaCurrent}></button>
-			`;
+                // Индикатор (только если больше одного изображения)
+                if (galleryImages.length > 1) {
+                    indicatorsHtml += `
+					<button type="button" data-bs-target="#productGalleryModal" data-bs-slide-to="${index}" aria-label="Slide ${index + 1}" class="${activeClass}" ${ariaCurrent}></button>
+				`;
+                }
 
                 // Слайд
                 carouselHtml += `
@@ -129,12 +127,21 @@ $wrapper_classes   = apply_filters(
             $('#galleryIndicators').html(indicatorsHtml);
             $('#galleryCarouselInner').html(carouselHtml);
 
+            // Показываем/скрываем стрелки и индикаторы в зависимости от количества изображений
+            if (galleryImages.length > 1) {
+                $('#productGalleryModal .carousel-control-prev, #productGalleryModal .carousel-control-next').show();
+                $('#galleryIndicators').show();
+            } else {
+                $('#productGalleryModal .carousel-control-prev, #productGalleryModal .carousel-control-next').hide();
+                $('#galleryIndicators').hide();
+            }
+
             // Инициализируем carousel
             var carouselElement = document.getElementById('productGalleryModal');
             var carousel = new bootstrap.Carousel(carouselElement, {
                 interval: false,
                 wrap: true,
-                keyboard: true
+                keyboard: galleryImages.length > 1 // Клавиатура только если есть несколько изображений
             });
 
             // Переключаем на нужный слайд
@@ -154,24 +161,11 @@ $wrapper_classes   = apply_filters(
             $('body').css('overflow', ''); // Возвращаем прокрутку страницы
         }
 
-        // Клик по изображению в галерее товара (только миниатюры, не главное изображение)
-        $('.woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image').each(function(index) {
-            // Пропускаем первое изображение (главное)
-            if (index === 0) {
-                return true;
-            }
-
-            $(this).find('a').on('click', function(e) {
-                e.preventDefault();
-
-                // Вычисляем правильный индекс (минус главное изображение)
-                var clickedIndex = $(this).closest('.woocommerce-product-gallery__image').index() - 1;
-
-                // Проверяем, что есть изображения в галерее
-                if (galleryImages.length > 0) {
-                    openGallery(clickedIndex);
-                }
-            });
+        // Клик по ЛЮБОМУ изображению в галерее товара (включая главное)
+        $('.woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image a').on('click', function(e) {
+            e.preventDefault();
+            var clickedIndex = $(this).closest('.woocommerce-product-gallery__image').index();
+            openGallery(clickedIndex);
         });
 
         // Закрытие по кнопке
