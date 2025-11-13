@@ -50,6 +50,7 @@
 		$full_hierarchy = get_category_hierarchy($child_category_id);
 
 		// Вывод результата
+		$title_and_description = '';
 		foreach ( $full_hierarchy as $category ) {
 			//echo $category->name . ' | ';
 			$title_and_description .= $category->name . ' | ';
