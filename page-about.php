@@ -128,23 +128,31 @@
 					</div>
 				</div>
 				<script>
-					let isPlaying = false;
-                    function play() {
-                        if (isPlaying) return;
-                        document.getElementById("video-player").play();
-                        document.getElementById("play-circle").style.display = "none";
-                        document.getElementById("stop-circle").style.display = "block";
-                        isPlaying = true;
+                    const video = document.getElementById('video-player');
+                    const playCircle = document.getElementById('play-circle');
+                    const stopCircle = document.getElementById('stop-circle');
+
+                    function togglePlay(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        if (video.paused) {
+                            video.play();
+                            playCircle.style.display = 'none';
+                            stopCircle.style.display = 'block';
+                        } else {
+                            video.pause();
+                            stopCircle.style.display = 'none';
+                            playCircle.style.display = 'block';
+                        }
                     }
 
-                    function pause() {
-                        if (!isPlaying) return;
-                        document.getElementById("video-player").pause();
-                        document.getElementById("stop-circle").style.display = "none";
-                        document.getElementById("play-circle").style.display = "block";
-                        isPlaying = false;
-                    }
-				</script>
+                    // Для мобильных и десктопа
+                    playCircle.addEventListener('click', togglePlay);
+                    playCircle.addEventListener('touchend', togglePlay);
+                    stopCircle.addEventListener('click', togglePlay);
+                    stopCircle.addEventListener('touchend', togglePlay);
+                </script>
 			</div>
 		</div>
 	</div>
