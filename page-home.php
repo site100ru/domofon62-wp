@@ -528,7 +528,7 @@ $('#card-doors').on('click', function() {
 	<div class="container">
 		<div class="row">
 			<div class="col align-items-center">
-				<h2 class="mb-0">Отзывы о нас в независимых источниках</h2>
+				<h2 class="mb-0 text-center text-md-start">Отзывы о нас в независимых источниках</h2>
 
 				<div class="row justify-content-center text-center text-md-start" style="padding-top: 65px;">
 					<div class="offset-md-2 col-md-3 mb-5 mb-md-0">

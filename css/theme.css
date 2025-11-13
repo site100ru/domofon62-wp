@@ -1408,3 +1408,15 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
 .second-section-home .woocommerce-loop-category__title {
     margin-top: auto; 
 }
+
+.modal-header h2 {
+    text-align: start;
+}
+
+.modal-content .modal-header {
+    align-items: flex-start;
+}
+
+.modal-header button.btn-close {
+    margin-top: 4px;
+}
