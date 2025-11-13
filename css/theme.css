@@ -1355,3 +1355,27 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
     width: 100%;
     height: auto;
 }
+
+@media (max-width: 768px) {
+    #play-circle #play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        background: url(../img/ico/play-button.svg);
+        z-index: 10;
+    }
+
+    #play-circle #stop {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        background: url(../img/ico/pause-button.svg);
+        z-index: 10;
+    }
+}
