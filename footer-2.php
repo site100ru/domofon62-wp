@@ -40,7 +40,7 @@
 					<p class="chasy pt-2 fw-bold mb-0 lh-1">Отдел продаж:</p>
 					<p class="chasy pt-1 m-0">Пн-Пт: c 8-30 до 17-00</p>
 					<p class="tel-header pt-1 mb-0">
-						<a href="tel:84912255046">8 (4912) 20-25-26</a>
+						<a href="tel:84912202526">8 (4912) 20-25-26</a>
 					</p>
 					<a
 					   href="tg://resolve?domain=RDK62"
