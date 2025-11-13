@@ -1382,4 +1382,25 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
         background-size: cover;
         z-index: 10;
     }
+
+    h2.woocommerce-loop-category__title {
+        hyphens: auto; /* Включает автоматический перенос по слогам */
+        word-wrap: break-word; /* Обеспечивает перенос длинных слов на новую строку, если необходимо */
+    }
+}
+
+.second-section-home .product-cat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.second-section-home .product-cat-card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.second-section-home .woocommerce-loop-category__title {
+    margin-top: auto; 
 }
