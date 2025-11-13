@@ -128,17 +128,22 @@
 					</div>
 				</div>
 				<script>
-					function play() {
-						document.getElementById("video-player").play();
-						document.getElementById("play-circle").style.display = "none";
-						document.getElementById("stop-circle").style.display = "block";
-					}
+					let isPlaying = false;
+                    function play() {
+                        if (isPlaying) return;
+                        document.getElementById("video-player").play();
+                        document.getElementById("play-circle").style.display = "none";
+                        document.getElementById("stop-circle").style.display = "block";
+                        isPlaying = true;
+                    }
 
-					function pause() {
-						document.getElementById("video-player").pause();
-						document.getElementById("stop-circle").style.display = "none";
-						document.getElementById("play-circle").style.display = "block";
-					}
+                    function pause() {
+                        if (!isPlaying) return;
+                        document.getElementById("video-player").pause();
+                        document.getElementById("stop-circle").style.display = "none";
+                        document.getElementById("play-circle").style.display = "block";
+                        isPlaying = false;
+                    }
 				</script>
 			</div>
 		</div>
