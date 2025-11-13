@@ -665,6 +665,8 @@ nav li > ul {
 /* SECTION GET */
 .block-get {
 	width: 100%;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* Строчный способ
