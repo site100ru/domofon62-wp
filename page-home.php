@@ -362,9 +362,9 @@ $('#card-doors').on('click', function() {
 							//echo '</div>';
 							foreach( $categories as $cat ) {
 								if ( $cat->count > 0 ) { ?>
-									<div class="col-6 col-md-3">
+									<div class="col-6 col-md-3 mb-3">
 										<a href="<?php echo get_category_link( $cat->term_id ); ?>">
-											<div class="product-cat-card text-center mb-3">
+											<div class="product-cat-card text-center">
 												<?php
 													woocommerce_subcategory_thumbnail( $cat ); ?>
 												<h2 class="woocommerce-loop-category__title">

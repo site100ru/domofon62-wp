@@ -111,7 +111,7 @@
 				<div class="row">
 					<div class="col">
 						<div style="position: relative">
-							<video id="video-player" poster="<?php echo get_template_directory_uri(); ?>/img/video-poster-img.jpg"  playsinline="playsinline" loop="loop" muted autoplay>
+							<video id="video-player" poster="<?php echo get_template_directory_uri(); ?>/img/video-poster-img.jpg"  playsinline loop muted autoplay>
 								<!-- muted="muted" autoplay="autoplay" -->
 								<!-- <source src="header-bg.ogv" type='video/ogg; codecs="theora, vorbis"'> -->
 								<source  src="<?php echo get_template_directory_uri(); ?>/video/video.mp4"  type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'/>
@@ -119,10 +119,10 @@
 							</video>
 
 							<div id="play-circle">
-								<div id="play" onclick="play();"></div>
+                                <div id="play" ontouchstart="play();" onclick="play();"></div>
 							</div>
 							<div id="stop-circle" style="display: none;">
-								<div id="stop" onclick="pause();"></div>
+                                <div id="stop" ontouchstart="pause();" onclick="pause();"></div>
 							</div>
 						</div>
 					</div>
