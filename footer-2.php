@@ -12,7 +12,7 @@
 					<?php $header_desc = get_field('header_desc', 5); 
 					echo $header_desc; ?>
 				</p>
-				<p class="copyright text-start mb-1">ИНН 16234057300</p>
+				<p class="copyright text-start mb-1">ИНН 6234057300</p>
 				<p class="copyright text-start">©РДК, <?php echo date("Y"); ?></p>
 				<div class="mt-1"><iframe src="https://yandex.ru/sprav/widget/rating-badge/1026973892?type=rating" width="150" height="50" frameborder="0"></iframe></div>
 			</div>
