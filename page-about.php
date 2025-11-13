@@ -114,7 +114,7 @@
 							<video id="video-player" poster="<?php echo get_template_directory_uri(); ?>/img/video-poster-img.jpg"  playsinline loop muted autoplay>
 								<!-- muted="muted" autoplay="autoplay" -->
 								<!-- <source src="header-bg.ogv" type='video/ogg; codecs="theora, vorbis"'> -->
-								<source  src="<?php echo get_template_directory_uri(); ?>/video/video.mp4"  type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'/>
+								<source  src="<?php echo get_template_directory_uri(); ?>/video/video-2.mp4"  type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'/>
 								<!-- <source src="header-bg.webm" type='video/webm; codecs="vp8, vorbis"'> -->
 							</video>
 
