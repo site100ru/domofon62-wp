@@ -1350,3 +1350,8 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
 .row-card-section .card {
 	height: 100%;
 }
+
+#video-player {
+    width: 100%;
+    height: auto;
+}
