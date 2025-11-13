@@ -1361,7 +1361,7 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
 }
 
 @media (max-width: 768px) {
-    #play-circle #play {
+    /* #play-circle #play {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -1385,7 +1385,7 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
         background-repeat: no-repeat;
         background-size: cover;
         z-index: 10;
-    }
+    } */
 
     h2.woocommerce-loop-category__title {
         hyphens: auto; /* Включает автоматический перенос по слогам */
