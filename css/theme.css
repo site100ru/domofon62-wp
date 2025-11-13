@@ -1371,7 +1371,6 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
     }
 
     #stop-circle #stop {
-        display: none;
         position: absolute;
         top: 50%;
         left: 50%;
