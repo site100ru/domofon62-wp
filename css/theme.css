@@ -1422,3 +1422,7 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
 .modal-header button.btn-close {
     margin-top: 4px;
 }
+
+.container-card .card {
+    height: 100%;
+}
