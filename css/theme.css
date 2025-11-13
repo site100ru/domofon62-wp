@@ -1365,10 +1365,12 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
         width: 30px;
         height: 30px;
         background: url(../img/ico/play-button.svg);
+        background-repeat: no-repeat;
+        background-size: cover;
         z-index: 10;
     }
 
-    #play-circle #stop {
+    #stop-circle #stop {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -1376,6 +1378,8 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
         width: 30px;
         height: 30px;
         background: url(../img/ico/pause-button.svg);
+        background-repeat: no-repeat;
+        background-size: cover;
         z-index: 10;
     }
 }
