@@ -43,7 +43,7 @@ get_header( '4' );
        <img src="<?php echo esc_url($bgtnl); ?>" alt="<?php echo $img_alt; ?>" class="img-fluid"/>
        <?php endif; ?> 
        </div> 
-                 <div class="col-12 col-md-6 col-lg-8 ps-5">
+                 <div class="col-12 col-md-6 col-lg-8 ps-0 ps-sm-5">
                  <a href="<?php the_permalink(); ?>">
                  <div class="obj-title pb-2 pt-4 pt-md-0"><?php the_title(); ?></div>
                  </a> 
