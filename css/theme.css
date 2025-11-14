@@ -1372,50 +1372,58 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
 }
 
 #play-circle {
-	width: 35%;
-	height: 35%;
-	background: url(../img/ico/play-circle.png) no-repeat;
-	background-size: contain;
-	position: absolute;
-	top: 32%;
-	left: 41%;
-	z-index: 999;
+    max-width: 250px;
+    aspect-ratio: 1;
+    width: 100%;
+    height: auto;
+    background: rgba(169, 169, 169, 0.5); /* серовато-прозрачный цвет */
+    border-radius: 50%; /* для круглой формы */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    display: flex;
+    justify-content: center; /* Выравнивание по горизонтали */
+    align-items: center; /* Выравнивание по вертикали */
+}
+
+@media (max-width: 768px) {
+    #play-circle {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 568px) {
+    #play-circle {
+        max-width: 100px;
+    }
 }
 
 #stop-circle {
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	z-index: 999;
-	display: none;
-	cursor: pointer;
-	transition: 0.25;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 999;
+    display: none;
+    cursor: pointer;
+    transition: 0.25s;
 }
 
 #play {
-	width: 35%;
-	height: 35%;
-	background: url(../img/ico/play.png) no-repeat;
-	background-size: contain;
-	position: absolute;
-	top: 32%;
-	left: 21%;
-	cursor: pointer;
-	transition: 0.25s;
+    width: 35%;
+    height: 35%;
+    background: url(../img/ico/play.png) no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    transition: 0.25s;
 }
 
 #play:hover {
-	width: 35%;
-	height: 35%;
-	background: url(../img/ico/play-accent.png) no-repeat;
-	background-size: contain;
-	position: absolute;
-	top: 32%;
-	left: 21%;
-	cursor: pointer;
-	transition: 0.25s;
+    background: url(../img/ico/play-accent.png) no-repeat;
+    background-size: contain;
 }
 
 @media (max-width: 768px) {

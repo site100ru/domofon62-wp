@@ -125,6 +125,20 @@
                                 <div id="stop" ontouchstart="pause();" onclick="pause();"></div>
 							</div>
 
+                            <script>
+                                function play() {
+                                    document.getElementById("video-player").play();
+                                    document.getElementById("play-circle").style.display = "none";
+                                    document.getElementById("stop-circle").style.display = "block";
+                                }
+
+                                function pause() {
+                                    document.getElementById("video-player").pause();
+                                    document.getElementById("stop-circle").style.display = "none";
+                                    document.getElementById("play-circle").style.display = "block";
+                                }
+                            </script>
+
                             <!-- <video 
                                 id="video-player" 
                                 poster="<?php echo get_template_directory_uri(); ?>/img/video-poster-img.jpg"  
