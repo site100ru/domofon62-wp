@@ -119,10 +119,10 @@
 							</video>
 
 							<div id="play-circle">
-                                <div id="play" ontouchstart="play();" onclick="play();"></div>
+                                <div id="play" onclick="play();"></div>
 							</div>
 							<div id="stop-circle" style="display: none;">
-                                <div id="stop" ontouchstart="pause();" onclick="pause();"></div>
+                                <div id="stop" onclick="pause();"></div>
 							</div>
 
                             <script>
