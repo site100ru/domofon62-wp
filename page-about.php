@@ -135,7 +135,7 @@
                                 function pause() {
                                     document.getElementById("video-player").pause();
                                     document.getElementById("stop-circle").style.display = "none";
-                                    document.getElementById("play-circle").style.display = "block";
+                                    document.getElementById("play-circle").style.display = "flex";
                                 }
                             </script>
 
