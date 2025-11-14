@@ -1368,35 +1368,57 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
 #video-player {
     width: 100%;
     height: auto;
+    position: relative;
+}
+
+#play-circle {
+	width: 35%;
+	height: 35%;
+	background: url(../img/ico/play-circle.png) no-repeat;
+	background-size: contain;
+	position: absolute;
+	top: 32%;
+	left: 41%;
+	z-index: 999;
+}
+
+#stop-circle {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 999;
+	display: none;
+	cursor: pointer;
+	transition: 0.25;
+}
+
+#play {
+	width: 35%;
+	height: 35%;
+	background: url(../img/ico/play.png) no-repeat;
+	background-size: contain;
+	position: absolute;
+	top: 32%;
+	left: 21%;
+	cursor: pointer;
+	transition: 0.25s;
+}
+
+#play:hover {
+	width: 35%;
+	height: 35%;
+	background: url(../img/ico/play-accent.png) no-repeat;
+	background-size: contain;
+	position: absolute;
+	top: 32%;
+	left: 21%;
+	cursor: pointer;
+	transition: 0.25s;
 }
 
 @media (max-width: 768px) {
-    /* #play-circle #play {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 30px;
-        height: 30px;
-        background: url(../img/ico/play-button.svg);
-        background-repeat: no-repeat;
-        background-size: cover;
-        z-index: 10;
-    }
-
-    #stop-circle #stop {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 30px;
-        height: 30px;
-        background: url(../img/ico/pause-button.svg);
-        background-repeat: no-repeat;
-        background-size: cover;
-        z-index: 10;
-    } */
-
     h2.woocommerce-loop-category__title {
         hyphens: auto; /* Включает автоматический перенос по слогам */
         word-wrap: break-word; /* Обеспечивает перенос длинных слов на новую строку, если необходимо */
