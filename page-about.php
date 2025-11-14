@@ -129,7 +129,7 @@
                                 function play() {
                                     document.getElementById("video-player").play();
                                     document.getElementById("play-circle").style.display = "none";
-                                    document.getElementById("stop-circle").style.display = "block";
+                                    document.getElementById("stop-circle").style.display = "flex";
                                 }
 
                                 function pause() {

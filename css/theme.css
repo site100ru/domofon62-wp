@@ -1426,6 +1426,11 @@ a.woocommerce-LoopProduct-link.woocommerce-loop-product__link {
     background-size: contain;
 }
 
+#stop-circle #stop {
+    width: 100%;
+    height: 100%;
+}
+
 @media (max-width: 768px) {
     h2.woocommerce-loop-category__title {
         hyphens: auto; /* Включает автоматический перенос по слогам */
