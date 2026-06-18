@@ -474,11 +474,13 @@
 
 
  @media (max-width: 768px) {
+   .text-under-h2 {
+     margin-block: 20px;
+   }
 
    .services-card,
    .services-first-card {
      height: 118px;
-     width: 118px;
      font-size: 8px;
    }
 
