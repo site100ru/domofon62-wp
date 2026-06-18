@@ -88,7 +88,7 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<h5 class="text-center product-modal-name"><strong>Наименование продукта:</strong></h5>
+						<h5 class="text-center product-modal-name">Наименование продукта</h5>
 						<p id="modalProduct" class="text-center">
 							<?php
 								/* 
@@ -127,7 +127,7 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<h5 class="text-center product-modal-name"><strong>Наименование услуги:</strong></h5>
+						<h5 class="text-center product-modal-name">Наименование услуги:</h5>
 						<p class="text-center"><?php echo the_title(); ?></p>
 						<div class="text-center"><?php echo do_shortcode('[contact-form-7 id="3628" title="Форма заказа услуги"]'); ?></div>
 					</div>

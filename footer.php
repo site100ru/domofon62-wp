@@ -6,7 +6,7 @@
 		<div class="row footer align-items-center">
 			<div class="col col-lg-3 d-flex flex-column">
 				<a href="<?php echo home_url( '/' ); $footer_logo = get_field('footer_logo', 5); ?>">
-					   <img src="<?php echo esc_url($footer_logo['url']); ?>" alt="<?php echo esc_attr($footer_logo['alt']); ?>" />
+					<img src="<?php echo esc_url($footer_logo['url']); ?>" alt="<?php echo esc_attr($footer_logo['alt']); ?>" />
 				</a>
 				<p class="string-ryazan-footer mt-2 mb-1">
 					<?php $header_desc = get_field('header_desc', 5); 
@@ -25,7 +25,7 @@
 					) );
 				?>
 			</div>
-  
+
 			<div class="col">
 				<?php
 					wp_nav_menu( array(
@@ -46,7 +46,9 @@
 							<a href="tel:+<?php $header_phone = get_field('header_phone', 5); $phone = preg_replace('/\D+/', '', $header_phone); echo $phone; ?>"><?php echo $header_phone; ?></a>
 						</p>
 					</div>
-					<a href="#" data-bs-toggle="modal" data-bs-target="#dostupModal"><div class="action-btn"><?php $header_btn_text = get_field('header_btn_text', 5); echo $header_btn_text; ?></div></a>
+					<a href="#" data-bs-toggle="modal" data-bs-target="#dostupModal">
+						<div class="action-btn"><?php $header_btn_text = get_field('header_btn_text', 5); echo $header_btn_text; ?></div>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -57,11 +59,11 @@
 			<div class="popups modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-                        <h2 class="product-modal-title" id="productModalLabel">Заказ товара</h2>
+						<h2 class="product-modal-title" id="productModalLabel">Заказ товара</h2>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<h5 class="text-center product-modal-name"><strong>Наименование продукта:</strong></h5>
+						<h5 class="text-center product-modal-name">Наименование продукта:</h5>
 						<p id="modalProduct" class="text-center">
 							<?php
 								/* 
@@ -83,24 +85,24 @@
 								}
 							</script>
 						</p>
-						<div class="text-center"><?php echo do_shortcode('[contact-form-7 id="372" title="Форма заказ товара"]'); ?></div>  
+						<div class="text-center"><?php echo do_shortcode('[contact-form-7 id="372" title="Форма заказ товара"]'); ?></div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- End order product -->
 
-		
+
 		<!-- Service Modal -->
 		<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
 			<div class="popups modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-                        <h2 class="product-modal-title" id="serviceModalLabel">Заказ услуги</h2>
+						<h2 class="product-modal-title" id="serviceModalLabel">Заказ услуги</h2>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-						<h5 class="text-center product-modal-name"><strong>Наименование услуги:</strong></h5>
+						<h5 class="text-center product-modal-name">Наименование услуги:</h5>
 						<p class="text-center"><?php echo the_title(); ?></p>
 						<div class="text-center"><?php echo do_shortcode('[contact-form-7 id="3628" title="Форма заказа услуги"]'); ?></div>
 					</div>
@@ -117,22 +119,26 @@
 	<div id="callbackBtn" class="callback-button" onclick="callbackButtonClick();">
 		<div id="btnIco" class="callback-button-ico"></div>
 	</div>
-	
+
 	<!--div id="formBtn" class="callback-form-button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-custom-class="custom-tooltip" data-bs-title="Перезвонить Вам?">
 		<a data-bs-toggle="modal" data-bs-target="#callbackModal"><div class="callback-form-button-ico"></div></a>
 	</div-->
 	<div id="phoneBtn" class="callback-phone-button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-custom-class="custom-tooltip" data-bs-title="Позвонить">
-		<a href="tel:+74912202526"><div class="callback-phone-button-ico"></div></a>
+		<a href="tel:+74912202526">
+			<div class="callback-phone-button-ico"></div>
+		</a>
 	</div>
 	<!--div id="whatsappBtn" class="callback-whatsapp-button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-custom-class="custom-tooltip" data-bs-title="Whatsapp">
 		<a href="whatsapp://send?phone=+79521236612"><div class="callback-whatsapp-button-ico"></div></a>
 	</div-->
-	
+
 	<!-- Telegram -->
 	<?php if ( get_theme_mod( 'mytheme_telegram' ) ) : ?>
-		<div id="telegramBtn" class="callback-telegram-button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-custom-class="custom-tooltip" data-bs-title="Telegram">
-			<a href="<?php echo get_theme_mod( 'mytheme_telegram' ); ?>"><div class="callback-telegram-button-ico"></div></a>
-		</div>
+	<div id="telegramBtn" class="callback-telegram-button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-custom-class="custom-tooltip" data-bs-title="Telegram">
+		<a href="<?php echo get_theme_mod( 'mytheme_telegram' ); ?>">
+			<div class="callback-telegram-button-ico"></div>
+		</a>
+	</div>
 	<?php endif; ?>
 </div>
 <!-- /Messengers button HTML -->
@@ -142,7 +148,7 @@
 
 
 <!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
+<script type="text/javascript">
 	(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
 	m[i].l=1*new Date();
 	for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
@@ -156,7 +162,9 @@
         webvisor:true
 	});
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/45523608" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<noscript>
+	<div><img src="https://mc.yandex.ru/watch/45523608" style="position:absolute; left:-9999px;" alt="" /></div>
+</noscript>
 <!-- /Yandex.Metrika counter -->
 
 
@@ -174,8 +182,9 @@
 	}, false );
 </script>
 <!-- End send YM target -->
-  
+
 <!-- <?php include get_template_directory() . '/inc/snowflake/snowflake.php'; ?> -->
 
 </body>
+
 </html>
