@@ -5,12 +5,17 @@
 	<div class="container">
 		<div class="row footer align-items-start">
 			<div class="col col-md-6 col-lg-3 d-flex flex-column">
-				<a href="<?php echo home_url( '/' ); $footer_logo = get_field('footer_logo', 5); ?>">
-					<img src="<?php echo esc_url($footer_logo['url']); ?>" alt="<?php echo esc_attr($footer_logo['alt']); ?>" />
+				<a href="<?php
+    echo home_url("/");
+    $footer_logo = get_field("footer_logo", 5);
+    ?>">
+					<img src="<?php echo esc_url($footer_logo["url"]); ?>" alt="<?php echo esc_attr($footer_logo["alt"]); ?>" />
 				</a>
 				<p class="string-ryazan-footer mt-2 mb-1">
-					<?php $header_desc = get_field('header_desc', 5); 
-					echo $header_desc; ?>
+					<?php
+     $header_desc = get_field("header_desc", 5);
+     echo $header_desc;
+     ?>
 				</p>
 				<p class="copyright text-start mb-1">ИНН 6234057300</p>
 				<p class="copyright text-start">©РДК, <?php echo date("Y"); ?></p>
@@ -18,21 +23,17 @@
 			</div>
 
 			<div class="col-12 col-md-6 col-lg-3">
-				<?php
-					wp_nav_menu( array(
-						'theme_location'  => 'domofontwo_footer_menu_pages',
-						'depth'           => 1 // 1 = no dropdowns, 2 = with dropdowns.
-					) );
-				?>
+				<?php wp_nav_menu([
+    	"theme_location" => "domofontwo_footer_menu_pages",
+    	"depth" => 1, // 1 = no dropdowns, 2 = with dropdowns.
+    ]); ?>
 			</div>
 
 			<div class="col col-md-6 col-lg-3">
-				<?php
-					wp_nav_menu( array(
-						'theme_location'  => 'domofontwo_footer_menu_products',
-						'depth'           => 1 // 1 = no dropdowns, 2 = with dropdowns.
-					) );
-				?>
+				<?php wp_nav_menu([
+    	"theme_location" => "domofontwo_footer_menu_products",
+    	"depth" => 1, // 1 = no dropdowns, 2 = with dropdowns.
+    ]); ?>
 			</div>
 
 			<div class="col-12 col-md-6 col-lg-3 text-start text-lg-end footer-end">
@@ -68,12 +69,22 @@
 			<!-- 			<div class="col-12 col-md-6 col-lg-3">
 				<div class="d-flex flex-column">
 					<div class="me-lg-3 mt-3 mt-md-auto">
-						<p class="chasy-footer"><?php $header_hours = get_field('header_hours', 5); echo $header_hours; ?></p>
+						<p class="chasy-footer"><?php
+      $header_hours = get_field("header_hours", 5);
+      echo $header_hours;
+      ?></p>
 						<p class="tel-footer">
-							<a href="tel:+<?php $header_phone = get_field('header_phone', 5); $phone = preg_replace('/\D+/', '', $header_phone); echo $phone; ?>"><?php echo $header_phone; ?></a>
+							<a href="tel:+<?php
+       $header_phone = get_field("header_phone", 5);
+       $phone = preg_replace("/\D+/", "", $header_phone);
+       echo $phone;
+       ?>"><?php echo $header_phone; ?></a>
 						</p>
 					</div>
-					<a href="#" data-bs-toggle="modal" data-bs-target="#dostupModal"><div class="action-btn"><?php $header_btn_text = get_field('header_btn_text', 5); echo $header_btn_text; ?></div></a>
+					<a href="#" data-bs-toggle="modal" data-bs-target="#dostupModal"><div class="action-btn"><?php
+     $header_btn_text = get_field("header_btn_text", 5);
+     echo $header_btn_text;
+     ?></div></a>
 				</div>
 			</div> -->
 		</div>
@@ -91,7 +102,7 @@
 						<h5 class="text-center product-modal-name">Наименование продукта</h5>
 						<p id="modalProduct" class="text-center">
 							<?php
-								/* 
+/* 
 								if ( is_product() == true ) {
 									global $product; 
 									if ( ! is_a( $product, 'WC_Product' ) ) {
@@ -101,7 +112,7 @@
 									$product = wc_get_product( get_the_ID() );
 									
 								} */
-							?>
+?>
 							<script>
 								function getName( name ) {
 									let productName = name;
@@ -156,7 +167,7 @@
 </footer>
 
 <!-- Check Connection Banner -->
-<div class="check-connection-banner">
+<!-- <div class="check-connection-banner">
 	<div class="container ">
 		<div class="row align-items-center">
 			<div class="col-7 col-md-7">
@@ -169,7 +180,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
 <!-- /Check Connection Banner -->
 
 
@@ -299,7 +310,7 @@
 </script>
 <!-- End send YM target -->
 
-<!-- <?php include get_template_directory() . '/inc/snowflake/snowflake.php'; ?> -->
+<!-- <?php include get_template_directory() . "/inc/snowflake/snowflake.php"; ?> -->
 
 </body>
 
